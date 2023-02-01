@@ -14,18 +14,22 @@ import java.util.Map;
 import se.jensenyh.javacourse.saltmerch.backend.model.ColorVariant;
 import se.jensenyh.javacourse.saltmerch.backend.model.Product;
 import se.jensenyh.javacourse.saltmerch.backend.model.SizeContainer;
-
+@Repository
 public class ProductRepository
 {
+
+
     // NOTE: LEAVE THIS RECORD AS IT IS!
     private record VariantWImages(int id, String colorName, String imagesCsv) {}
-    
-    
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
     
     /** Only calls selectAll(String category) with a null category;
      * Useful for reading ALL products, regardless of category. */
     public List<Product> selectAll()
     {
+
         return selectAll(null);
     }
     
@@ -34,7 +38,7 @@ public class ProductRepository
     public List<Product> selectAll(String category)
     {
         // todo: write an SQL query that only selects all rows from the products table
-        String sql = "";// <<<< todo: WRITE SQL QUERY HERE
+        String sql = "SELECT * FROM products";// <<<< todo: WRITE SQL QUERY HERE
         
         
         
@@ -44,11 +48,17 @@ public class ProductRepository
         
         
         // todo: create a RowMapper for the Product class,
+
         //  using the constructor that takes id, category, title, description, and previewImage
         // NOTE: have in mind that the column name that corresponds to previewImage is preview_image
-        RowMapper<Product> rm = null;// <<<< todo: CREATE RowMapper HERE
-        
-        
+        // <<<< todo: CREATE RowMapper HERE
+        RowMapper<Product> rm = (rs, rowNum) -> new Product(
+                rs.getInt("id"),
+                rs.getString("category"),
+                rs.getString("title"),
+                rs.getString("description"),
+                rs.getString("preview_image"));
+
         
         // NOTE: leave the rest as it is!
         Map<String, Object> paramMap = new HashMap<>();
@@ -154,7 +164,7 @@ public class ProductRepository
     {
         // todo: write the SQL query for deleting a single product
         var sql = """
-                """;// <<<< todo: WRITE SQL QUERY HERE
+                DELETE FROM Products WHERE id = ?""";// <<<< todo: WRITE SQL QUERY HERE
         
         
         // todo: execute the query while also passing the id as a parameter

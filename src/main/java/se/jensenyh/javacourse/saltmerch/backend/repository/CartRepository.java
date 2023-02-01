@@ -12,18 +12,30 @@ import java.util.List;
 import java.util.Map;
 
 import se.jensenyh.javacourse.saltmerch.backend.model.CartItem;
-
+@Repository
 public class CartRepository
 {
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+    /* API  ( application programming interface) connection between computers or between
+    computer programs */
+
+/*jdbcTemplate eliminates all the problems av Jdbc API, as writing a long code before and efter executing the query,
+such as creating connection, statement, closing result set, connection etc. JdbcTemplate it provides you methods to
+write the queries directly, and saves a lot of work and time*/
+
+
     // todo: this method needs you to write its SQL query
     public List<CartItem> selectAllItems()
     {
         // todo: write the SQL query for getting all columns and rows from the cart_items table
-        var sql = "";// <<<< todo: WRITE SQL QUERY HERE
+        var sql = "SELECT * FROM cart_items";// <<<< todo: WRITE SQL QUERY HERE
 
+// RowMapper interface is used to fetch the records from the database using the query() method of the JdbcTemplate class.
 
         // NOTE: you can leave everything else here as it is
         RowMapper<CartItem> rm = (rs, rowNum) -> new CartItem(
+            //1) rs. ЗНАЧИ returns    2) always returns a list of objects (rows)<-РЕДОВИ
                 rs.getInt("product_id"),
                 rs.getString("title"),
                 rs.getString("color"),
